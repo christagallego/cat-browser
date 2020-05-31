@@ -11,7 +11,7 @@ function App() {
   return (
   	<Router basename={'/cat-browser'}>
 		<Route path="/" exact component={Home} />
-		<Route path="/:id" exact component={Cat} />
+		<Route path="/:id" component={Cat} />
 	</Router>
   );
 }
