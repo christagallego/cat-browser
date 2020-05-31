@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-  	<Router basename={'/cat-browser'}>
+  	<Router basename={process.env.PUBLIC_URL}>
 		<Route path="/" exact component={Home} />
 		<Route path="/:id" component={Cat} />
 	</Router>
