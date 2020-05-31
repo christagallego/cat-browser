@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
@@ -8,21 +8,30 @@ import Card from 'react-bootstrap/Card';
 function Cat({match}) {
 	const [catDetails, setCat] = useState({ breeds: [] });
 	const [catBreed, setCatBreed] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const location = useLocation();
 
 	useEffect(() => {
 		const fetchCat = async () => {
 			setIsLoading(true);
-			const res = await fetch(`https://api.thecatapi.com/v1/images/${match.params.id}`);
-			const data = await res.json();
+				let res;
+  				try {
+					res = await fetch(`https://api.thecatapi.com/v1/images/${location.pathname.replace("/","")}`);					
+				} catch(error) {
+				    return error;
+				}
+				if (!res.ok) {
+		            return res;
+		        }
+		        const data = await res.json();
 
-			setCat(data);
-			setIsLoading(false);
+		        setCat(data);
 
-			setCatBreed("/?breed=" + data.breeds[0].id);
+		        setCatBreed("/?breed=" + data.breeds[0].id);
+		        setIsLoading(false);
 		}
 		fetchCat();
-	}, [match]);
+	}, [match, location.pathname]);
 
 	
 
