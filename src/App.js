@@ -34,11 +34,11 @@ function App() {
 	    	setIsLoading(true);
 	    	const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=100&page=100&breed_id=${breedSelected}`);
 	    	const data = await res.json();
-	    	console.log(data);
+
 	    	setCatsList(data);
-	    	setCount(10);
+	    	setCount(10); // set first count every select of breed
 	    	setIsLoading(false);
-	    	setLoadVisible(true);
+	    	setLoadVisible(true); // set the Load more button to visible
 	    }
 		fetchCats();
 	}, [breedSelected]);
