@@ -10,6 +10,7 @@ import Card from 'react-bootstrap/Card';
 
 function Cat({match}) {
 	const [catDetails, setCat] = useState({ breeds: [] });
+	const [catBreed, setCatBreed] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
@@ -20,9 +21,11 @@ function Cat({match}) {
 		setIsLoading(true);
 		const res = await fetch(`https://api.thecatapi.com/v1/images/${match.params.id}`);
 		const data = await res.json();
-		console.log(data);
+
 		setCat(data);
 		setIsLoading(false);
+
+		setCatBreed("/?breed=" + data.breeds[0].id);
 	}
 
 	return (
@@ -31,7 +34,7 @@ function Cat({match}) {
 	    		{isLoading ?
 	    			<h4>Loading...</h4> :
 		    		<Card>
-		    			<Card.Header><Button variant="primary" as={Link} to="/">Back</Button></Card.Header>
+		    			<Card.Header><Button variant="primary" as={Link} to={catBreed}>Back</Button></Card.Header>
 			    		 	<Card.Img variant="top" src={catDetails.url} />
 		    		 		{ Array.isArray(catDetails.breeds) ?
 		    		 		    catDetails.breeds.map( details => (

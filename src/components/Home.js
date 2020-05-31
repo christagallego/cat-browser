@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 import Cats from './Cats';
 
@@ -19,8 +21,13 @@ function Home() {
 
 	const firstLoad = useRef(true);
 
+	const location = useLocation();
+
 	useEffect(() => {
 		fetchBreeds();
+
+		let params = queryString.parse(location.search);
+		setBreedLocation(params);
 	}, []);
 
 	useEffect(() => {
@@ -51,6 +58,9 @@ function Home() {
 		setIsLoading(false);
 	}
 
+	const setBreedLocation = (params) => {
+		setBreedSelect(params.breed);
+	}
 
 	const onBreedSelect = e => {
 		setBreedSelect(e.target.value);
@@ -74,7 +84,7 @@ function Home() {
     		      	<Col xs={12} sm={6} md={3}>
     		      		<Form.Group controlId="formBreedSelect">
     		      			<Form.Label>Breed</Form.Label>
-    		      			<Form.Control as="select" onChange={ onBreedSelect } disabled={isLoading}>
+    		      			<Form.Control as="select" onChange={ onBreedSelect } disabled={isLoading} value={breedSelected}>
     		      			  	<option value>Select breed</option>
     		      			  {breeds.map(item => (
     		      			  	<option key={item.id} value={item.id}>{item.name}</option>
