@@ -16,6 +16,7 @@ function App() {
 	const [breedSelected, setBreedSelect] = useState("");
 	const [catsList, setCatsList] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [count, setCount] = useState(4);
 
 	const firstLoad = useRef(true);
 
@@ -34,6 +35,7 @@ function App() {
 	    	const data = await res.json();
 	    	console.log(data);
 	    	setCatsList(data);
+	    	setCount(4);
 	    	setIsLoading(false);
 	    }
 		fetchCats();
@@ -52,6 +54,16 @@ function App() {
 
 	const onBreedSelect = e => {
 		setBreedSelect(e.target.value);
+	}
+
+
+	const loadMore = () => {
+		setIsLoading(true);
+		setTimeout(() => {
+		    setCount(count + 4);
+			setIsLoading(false);
+		}, 500);
+		//setCount(count + 4);
 	}
 
   return (
@@ -74,8 +86,9 @@ function App() {
 	     	<Row>
 	     		{Array.isArray(catsList) && catsList.length === 0 ?
 	     			 <Col xs={12}>No Cats Available</Col> :
-		     		catsList.map(cat => (
+		     		catsList.slice(0,count).map(cat => (
 		     			<Cats
+		     				key={cat.id}
 		     				id = {cat.id}
 		     				imageUrl = {cat.url}
 		     			/>
@@ -84,7 +97,7 @@ function App() {
 	     	</Row>
 	     	<Row>
 	     		<Col xs={12} sm={6} md={3}>
-	     			<Button variant="success" disabled>{isLoading ? "Loading Cat..." : "Load More"}</Button>
+	     			<Button variant="success" disabled={(Array.isArray(catsList) && catsList.length === 0) || isLoading} onClick={ loadMore }>{isLoading ? "Loading Cat..." : "Load More"}</Button>
 	     		</Col>
 	     	</Row>
 	    </Container>
