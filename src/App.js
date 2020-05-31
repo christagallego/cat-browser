@@ -16,7 +16,8 @@ function App() {
 	const [breedSelected, setBreedSelect] = useState("");
 	const [catsList, setCatsList] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [count, setCount] = useState(4);
+	const [loadVisible, setLoadVisible] = useState(true);
+	const [count, setCount] = useState(10);
 
 	const firstLoad = useRef(true);
 
@@ -35,8 +36,9 @@ function App() {
 	    	const data = await res.json();
 	    	console.log(data);
 	    	setCatsList(data);
-	    	setCount(4);
+	    	setCount(10);
 	    	setIsLoading(false);
+	    	setLoadVisible(true);
 	    }
 		fetchCats();
 	}, [breedSelected]);
@@ -62,8 +64,8 @@ function App() {
 		setTimeout(() => {
 		    setCount(count + 4);
 			setIsLoading(false);
+			setLoadVisible(count < catsList.length);
 		}, 500);
-		//setCount(count + 4);
 	}
 
   return (
@@ -97,7 +99,10 @@ function App() {
 	     	</Row>
 	     	<Row>
 	     		<Col xs={12} sm={6} md={3}>
-	     			<Button variant="success" disabled={(Array.isArray(catsList) && catsList.length === 0) || isLoading} onClick={ loadMore }>{isLoading ? "Loading Cat..." : "Load More"}</Button>
+	     			{ loadVisible ?
+	     				<Button variant="success" disabled={(Array.isArray(catsList) && catsList.length === 0) || isLoading} onClick={ loadMore }>{isLoading ? "Loading Cat..." : "Load More"}</Button>
+	     				: ""
+	     			}
 	     		</Col>
 	     	</Row>
 	    </Container>
