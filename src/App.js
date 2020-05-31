@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
 	const [breeds, setBreeds] = useState([]);
 	const [breedSelected, setBreedSelect] = useState("");
 	const [catsList, setCatsList] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const firstLoad = useRef(true);
 
@@ -26,23 +28,27 @@ function App() {
 	    	firstLoad.current = false;
 	    	return;
 	    }
+	    const fetchCats = async () => {
+	    	setIsLoading(true);
+	    	const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=100&page=100&breed_id=${breedSelected}`);
+	    	const data = await res.json();
+	    	console.log(data);
+	    	setCatsList(data);
+	    	setIsLoading(false);
+	    }
 		fetchCats();
 	}, [breedSelected]);
 
 
 	const fetchBreeds = async () => {
+		setIsLoading(true);
 		const res = await fetch('https://api.thecatapi.com/v1/breeds');
 		const data = await res.json();
 
 		setBreeds(data);
+		setIsLoading(false);
 	}
 
-	const fetchCats = async () => {
-		const res = await fetch(`https://api.thecatapi.com/v1/images/search?limit=10&page=100&breed_id=${breedSelected}`);
-		const data = await res.json();
-		console.log(data);
-		setCatsList(data);
-	}
 
 	const onBreedSelect = e => {
 		setBreedSelect(e.target.value);
@@ -56,7 +62,7 @@ function App() {
 		      	<Col xs={12} sm={6} md={3}>
 		      		<Form.Group controlId="formBreedSelect">
 		      			<Form.Label>Breed</Form.Label>
-		      			<Form.Control as="select" onChange={ onBreedSelect }>
+		      			<Form.Control as="select" onChange={ onBreedSelect } disabled={isLoading}>
 		      			  	<option value>Select breed</option>
 		      			  {breeds.map(item => (
 		      			  	<option key={item.id} value={item.id}>{item.name}</option>
@@ -75,6 +81,11 @@ function App() {
 		     			/>
 		     		))
 		     	}
+	     	</Row>
+	     	<Row>
+	     		<Col xs={12} sm={6} md={3}>
+	     			<Button variant="success" disabled>{isLoading ? "Loading Cat..." : "Load More"}</Button>
+	     		</Col>
 	     	</Row>
 	    </Container>
 	  </div>
