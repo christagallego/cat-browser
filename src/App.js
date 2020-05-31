@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Cats from './components/Cats';
 
 import './App.css';
