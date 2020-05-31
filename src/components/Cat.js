@@ -11,19 +11,20 @@ function Cat({match}) {
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		const fetchCat = async () => {
+			setIsLoading(true);
+			const res = await fetch(`https://api.thecatapi.com/v1/images/${match.params.id}`);
+			const data = await res.json();
+
+			setCat(data);
+			setIsLoading(false);
+
+			setCatBreed("/?breed=" + data.breeds[0].id);
+		}
 		fetchCat();
-	}, []);
+	}, [match]);
 
-	const fetchCat = async () => {
-		setIsLoading(true);
-		const res = await fetch(`https://api.thecatapi.com/v1/images/${match.params.id}`);
-		const data = await res.json();
-
-		setCat(data);
-		setIsLoading(false);
-
-		setCatBreed("/?breed=" + data.breeds[0].id);
-	}
+	
 
 	return (
 	    <div className="cat">

@@ -28,7 +28,7 @@ function Home() {
 
 		let params = queryString.parse(location.search);
 		setBreedLocation(params);
-	}, []);
+	}, [location]);
 
 	useEffect(() => {
 		if (firstLoad.current) {
